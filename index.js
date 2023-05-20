@@ -55,8 +55,6 @@ async function run() {
       
       const subCategory = req.params.category
 
-      console.log(subCategory);
-
       let query = {sub_category: subCategory}
 
       const result = await toysCollection.find(query).toArray()
