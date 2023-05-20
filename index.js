@@ -31,12 +31,22 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const toysCollection = client.db("CastleDisneyDB").collection("toys")
+    const toysCollection = client.db("CastleDisneyDB").collection("toysCollection")
 
     app.get("/toys", async(req,res) => {
 
+        // const option = {
+        //     projection: {
+        //         seller: 1, 
+        //         toy_name: 1, 
+        //         available_quantity: 1, 
+        //         sub_category: 1, 
+        //         price: 1, 
+        //     }
+        // }
         const cursor = await toysCollection.find().toArray()
         res.send(cursor)
+        console.log(cursor);
     })
 
     app.get("/toys/:_id", async(req, res) => {
