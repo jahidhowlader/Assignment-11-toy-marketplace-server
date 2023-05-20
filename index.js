@@ -34,6 +34,7 @@ async function run() {
 
     const toysCollection = client.db("CastleDisneyDB").collection("toysCollection")
 
+    // Fetch All toys
     app.get("/toys", async (req, res) => {
 
       // const option = {
@@ -49,16 +50,50 @@ async function run() {
       res.send(cursor)
     })
 
+    // Fetch Sub Category Toys
+    app.get("/:category", async (req, res) => {
+      
+      const subCategory = req.params.category
+
+      console.log(subCategory);
+
+      let query = {sub_category: subCategory}
+
+      const result = await toysCollection.find(query).toArray()
+      res.send(result)
+      
+    })
+
+    // Fetch Specific Toy
     app.get("/toys/:_id", async (req, res) => {
 
       const _id = req.params._id
-      console.log(_id);
 
       const query = { _id: new ObjectId(_id) }
       const toyDetails = await toysCollection.findOne(query)
       res.send(toyDetails)
     })
 
+    // Fetch My Toy
+    app.get("/my-toys", async (req, res) => {
+
+      let query = {}
+      if (req.query?.email) {
+        query = { sellerEmail: req.query.email }
+      }
+
+      const result = await toysCollection.find(query).toArray()
+      res.send(result)
+    })
+
+    // Post New Toys
+    app.post("/add-toys", async (req, res) => {
+     
+      const toyDetails = req.body
+
+      const result = await toysCollection.insertOne(toyDetails)
+      res.send(result)
+    })
 
 
 
