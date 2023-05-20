@@ -9,6 +9,7 @@ const app = express()
 
 // Express Middleware
 app.use(cors())
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.send('hello world')
@@ -33,30 +34,29 @@ async function run() {
 
     const toysCollection = client.db("CastleDisneyDB").collection("toysCollection")
 
-    app.get("/toys", async(req,res) => {
+    app.get("/toys", async (req, res) => {
 
-        // const option = {
-        //     projection: {
-        //         seller: 1, 
-        //         toy_name: 1, 
-        //         available_quantity: 1, 
-        //         sub_category: 1, 
-        //         price: 1, 
-        //     }
-        // }
-        const cursor = await toysCollection.find().toArray()
-        res.send(cursor)
-        console.log(cursor);
+      // const option = {
+      //     projection: {
+      //         seller: 1, 
+      //         toy_name: 1, 
+      //         available_quantity: 1, 
+      //         sub_category: 1, 
+      //         price: 1, 
+      //     }
+      // }
+      const cursor = await toysCollection.find().toArray()
+      res.send(cursor)
     })
 
-    app.get("/toys/:_id", async(req, res) => {
-        
-        const _id = req.params._id
-        console.log(_id);
+    app.get("/toys/:_id", async (req, res) => {
 
-        const query = {_id: new ObjectId(_id)}
-        const toyDetails = await toysCollection.findOne(query)
-        res.send(toyDetails)
+      const _id = req.params._id
+      console.log(_id);
+
+      const query = { _id: new ObjectId(_id) }
+      const toyDetails = await toysCollection.findOne(query)
+      res.send(toyDetails)
     })
 
 
@@ -73,6 +73,6 @@ async function run() {
 run().catch(console.dir);
 
 
-app.listen(PORT, ()=> {
-    console.log(`Server is running on PORT ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on PORT ${PORT}`);
 })
