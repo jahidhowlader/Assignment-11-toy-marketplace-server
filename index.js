@@ -30,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const toysCollection = client.db("castle_disneyDB").collection("ToysCollection")
 
@@ -39,6 +39,20 @@ async function run() {
 
       const cursor = await toysCollection.find().toArray()
       res.send(cursor)
+    })
+
+    // Search Specific toy
+    await toysCollection.createIndex({ title: 1 })
+
+    app.get("/toys/:search", async (req, res) => {
+
+      const searchText = req.params.search
+
+      const result = await toysCollection.find({
+        toy_name: { $regex: searchText, $options: "i" }
+      }).toArray()
+
+      res.send(result)
     })
 
     // Fetch My Toy
