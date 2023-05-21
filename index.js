@@ -32,13 +32,26 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
-    const toysCollection = client.db("castle_disneyDB").collection("ToysCollection")
+    const toysCollection = client.db("CastleDisneyDB").collection("ToyCollection")
 
     // Fetch All toys
     app.get("/toys", async (req, res) => {
 
       const cursor = await toysCollection.find().toArray()
       res.send(cursor)
+    })
+
+    // Get sorting data
+    app.get("/toys/sort/:_order", async (req, res) => {
+
+      console.log(req.params._order);
+      if (req.params._order === 'ascending') {
+        const cursor = await toysCollection.find().sort({ price: 1 }).toArray()
+        return res.send(cursor)
+      } else if (req.params._order === 'descending') {
+        const cursor = await toysCollection.find().sort({ price: -1 }).toArray()
+        return res.send(cursor)
+      }
     })
 
     // Search Specific toy
@@ -80,9 +93,10 @@ async function run() {
     })
 
     // Fetch Specific Toy
-    app.get("/toys/:_id", async (req, res) => {
+    app.get("/toy/:_id", async (req, res) => {
 
       const _id = req.params._id
+      console.log(_id);
 
       const query = { _id: new ObjectId(_id) }
       const toyDetails = await toysCollection.findOne(query)
