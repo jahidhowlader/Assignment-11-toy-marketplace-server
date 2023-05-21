@@ -32,7 +32,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const toysCollection = client.db("CastleDisneyDB").collection("toysCollection")
+    const toysCollection = client.db("castle_disneyDB").collection("ToysCollection")
 
     // Fetch All toys
     app.get("/toys", async (req, res) => {
@@ -53,7 +53,12 @@ async function run() {
     // Fetch My Toy
     app.get("/my-toys", async (req, res) => {
 
-      const result = await toysCollection.find().toArray()
+      let query = {}
+      if (req.query?.email) {
+        query = { seller_email: req.query.email }
+      }
+
+      const result = await toysCollection.find(query).toArray()
       res.send(result)
     })
 
@@ -92,6 +97,42 @@ async function run() {
       const toyDetails = req.body
 
       const result = await toysCollection.insertOne(toyDetails)
+      res.send(result)
+    })
+
+    // Toy updated details
+    app.put("/my-toys/:_id", async (req, res) => {
+
+      const _id = req.params._id
+
+      const filter = {
+        _id: new ObjectId(_id)
+      }
+
+      const updateToy = {
+        $set: {
+          price: req.body.price,
+          available_quantity: req.body.available_quantity,
+          description: req.body.description,
+        }
+      }
+
+      const result = await toysCollection.updateOne(filter, updateToy)
+      res.send(result)
+
+      console.log(_id);
+      console.log(req.body);
+    })
+
+    app.delete("/my-toys:_id", async (req, res) => {
+
+      const _id = req.params._id
+
+      const query = {
+        _id: new ObjectId(_id)
+      }
+
+      const result = await toysCollection.deleteOne(query)
       res.send(result)
     })
 
