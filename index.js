@@ -37,15 +37,6 @@ async function run() {
     // Fetch All toys
     app.get("/toys", async (req, res) => {
 
-      // const option = {
-      //     projection: {
-      //         seller: 1, 
-      //         toy_name: 1, 
-      //         available_quantity: 1, 
-      //         sub_category: 1, 
-      //         price: 1, 
-      //     }
-      // }
       const cursor = await toysCollection.find().toArray()
       res.send(cursor)
     })
@@ -119,9 +110,6 @@ async function run() {
 
       const result = await toysCollection.updateOne(filter, updateToy)
       res.send(result)
-
-      console.log(_id);
-      console.log(req.body);
     })
 
     app.delete("/my-toys:_id", async (req, res) => {
