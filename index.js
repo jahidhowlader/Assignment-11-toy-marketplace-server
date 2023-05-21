@@ -44,7 +44,6 @@ async function run() {
     // Get sorting data
     app.get("/toys/sort/:_order", async (req, res) => {
 
-      console.log(req.params._order);
       if (req.params._order === 'ascending') {
         const cursor = await toysCollection.find().sort({ price: 1 }).toArray()
         return res.send(cursor)
@@ -96,7 +95,6 @@ async function run() {
     app.get("/toy/:_id", async (req, res) => {
 
       const _id = req.params._id
-      console.log(_id);
 
       const query = { _id: new ObjectId(_id) }
       const toyDetails = await toysCollection.findOne(query)
@@ -140,6 +138,7 @@ async function run() {
       res.send(result)
     })
 
+    // delete my toy 
     app.delete("/my-toys:_id", async (req, res) => {
 
       const _id = req.params._id
