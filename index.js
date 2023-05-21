@@ -50,16 +50,23 @@ async function run() {
       res.send(cursor)
     })
 
+    // Fetch My Toy
+    app.get("/my-toys", async (req, res) => {
+
+      const result = await toysCollection.find().toArray()
+      res.send(result)
+    })
+
     // Fetch Sub Category Toys
     app.get("/:category", async (req, res) => {
-      
+
       const subCategory = req.params.category
 
-      let query = {sub_category: subCategory}
+      let query = { sub_category: subCategory }
 
       const result = await toysCollection.find(query).toArray()
       res.send(result)
-      
+
     })
 
     // Fetch Specific Toy
@@ -75,18 +82,13 @@ async function run() {
     // Fetch My Toy
     app.get("/my-toys", async (req, res) => {
 
-      let query = {}
-      if (req.query?.email) {
-        query = { sellerEmail: req.query.email }
-      }
-
-      const result = await toysCollection.find(query).toArray()
+      const result = await toysCollection.find().toArray()
       res.send(result)
     })
 
     // Post New Toys
     app.post("/add-toys", async (req, res) => {
-     
+
       const toyDetails = req.body
 
       const result = await toysCollection.insertOne(toyDetails)
